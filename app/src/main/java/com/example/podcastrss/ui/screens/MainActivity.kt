@@ -1,4 +1,4 @@
-package com.example.podcastrss
+package com.example.podcastrss.ui.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
