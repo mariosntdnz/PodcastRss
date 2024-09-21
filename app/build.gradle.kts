@@ -45,6 +45,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/rxjava.properties"
         }
     }
 }
@@ -59,6 +60,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3)
+    implementation(libs.retrofit2)
+    implementation(libs.okhttp3)
+    implementation(libs.simple.xml)
+    implementation(libs.converter.simplexml)
+    implementation(libs.adapter.rxjava)
+    implementation(libs.adapter.rxjava2)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
