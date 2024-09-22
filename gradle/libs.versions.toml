@@ -13,6 +13,7 @@ composeBom = "2024.09.02"
 okhttp3 = "3.14.9"
 retrofit2 = "2.9.0"
 simpleXml = "2.7.1"
+junitKtx = "1.2.1"
 
 [libraries]
 adapter-rxjava = { module = "com.squareup.retrofit2:adapter-rxjava", version.ref = "adapterRxjava" }
@@ -36,6 +37,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }
 simple-xml = { module = "org.simpleframework:simple-xml", version.ref = "simpleXml" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

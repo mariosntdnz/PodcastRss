@@ -1,3 +1,5 @@
+import org.apache.groovy.lang.annotation.Incubating
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -48,6 +50,10 @@ android {
             excludes += "META-INF/rxjava.properties"
         }
     }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -69,7 +75,9 @@ dependencies {
     implementation(libs.adapter.rxjava2)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("io.insert-koin:koin-androidx-compose:3.2.0")
+    implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
