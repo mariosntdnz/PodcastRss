@@ -30,15 +30,15 @@ class PodcastRssChannel @JvmOverloads constructor(
 
     @field:ElementList(name = "image", required = false, inline = true)
     @param:ElementList(name = "image", required = false, inline = true)
-    var imageChannel: List<Image>? = emptyList(),
+    var imageChannel: List<PodcastRssImage>? = emptyList(),
 
     @field:ElementList(name = "category", required = false, inline = true)
     @param:ElementList(name = "category", required = false, inline = true)
-    var categoryChannel: List<Category>? = emptyList(),
+    var categoryChannel: List<PodcastRssCategory>? = emptyList(),
 
     @field:ElementList(name = "author", required = false, inline = true)
     @param:ElementList(name = "author", required = false, inline = true)
-    var author: List<Author>? = emptyList(),
+    var author: List<PodcastRssAuthor>? = emptyList(),
 
     @field:ElementList(required = false, name = "item", inline = true)
     @param:ElementList(required = false, name = "item", inline = true)
@@ -54,7 +54,7 @@ class PodcastRssItem @JvmOverloads constructor(
 
     @field:ElementList(name = "title", required = false, inline = true)
     @param:ElementList(name = "title", required = false, inline = true)
-    var title: List<Title>? = null,
+    var title: List<PodcastRssTitle>? = null,
 
     @field:Element(name = "description", required = false)
     @param:Element(name = "description", required = false)
@@ -66,7 +66,7 @@ class PodcastRssItem @JvmOverloads constructor(
 
     @field:ElementList(name = "image", required = false, inline = true)
     @param:ElementList(name = "image", required = false, inline = true)
-    var image: List<Image>? = emptyList(),
+    var image: List<PodcastRssImage>? = emptyList(),
 
     @field:Element(name = "pubDate", required = false)
     @param:Element(name = "pubDate", required = false)
@@ -82,24 +82,24 @@ class PodcastRssItem @JvmOverloads constructor(
 
     @field:Element(name = "enclosure", required = false)
     @param:Element(name = "enclosure", required = false)
-    var enclosure: Enclosure? = null
+    var enclosure: PodcastRssEnclosure? = null
 )
 
 @Root(name="author", strict = false)
-class Author @JvmOverloads constructor(
+class PodcastRssAuthor @JvmOverloads constructor(
     @field:Text(required = false)
     var auth: String = ""
 )
 
 @Root(name="title", strict = false)
-class Title @JvmOverloads constructor(
+class PodcastRssTitle @JvmOverloads constructor(
     @field:Text(required = false)
     var title: String = ""
 )
 
 
 @Root(name="image", strict = false)
-class Image @JvmOverloads constructor(
+class PodcastRssImage @JvmOverloads constructor(
     @field:Element(name = "url", required = false)
     var url: String = "",
 
@@ -108,13 +108,13 @@ class Image @JvmOverloads constructor(
 )
 
 @Root(name="category", strict = false)
-class Category @JvmOverloads constructor(
+class PodcastRssCategory @JvmOverloads constructor(
     @field:Attribute(name = "text", required = false)
     var category: String = ""
 )
 
 @Root(name="enclosure", strict = false)
-class Enclosure @JvmOverloads constructor(
+class PodcastRssEnclosure @JvmOverloads constructor(
     @field:Attribute(name = "url", required = false)
     var url: String = "",
 
