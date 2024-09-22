@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.adapter.rxjava)
     implementation(libs.adapter.rxjava2)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
