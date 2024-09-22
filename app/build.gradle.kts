@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.adapter.rxjava)
     implementation(libs.adapter.rxjava2)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("io.insert-koin:koin-androidx-compose:3.2.0")
     implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)

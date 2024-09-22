@@ -17,6 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.rememberNavController
+import com.example.podcastrss.ui.navigation.NavGraph
 import com.example.podcastrss.ui.theme.PodcastRssTheme
 import com.example.podcastrss.viewModel.PodcastRssSearchViewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -26,18 +28,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             PodcastRssTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                    val viewModel = getViewModel<PodcastRssSearchViewModel>()
-                    val state by viewModel.state.collectAsStateWithLifecycle()
-
-                    LaunchedEffect(Unit) {
-                        viewModel.searchPodcastRss("https://anchor.fm/s/7a186bc/podcast/rss")
-                    }
-
-                    Greeting(
-                        name = state.podcast.toString(),
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) { innerPadding ->
+                    NavGraph(
+                        navController = navController,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
