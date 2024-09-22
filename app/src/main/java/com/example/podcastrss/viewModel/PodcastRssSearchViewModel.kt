@@ -2,6 +2,7 @@ package com.example.podcastrss.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.podcastrss.models.Podcast
 import com.example.podcastrss.use_case.PodcastRssSearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -10,7 +11,7 @@ import kotlinx.coroutines.launch
 data class PodcastRssSearchState(
     val isLoading: Boolean,
     val errorMsg: String,
-    val podcastRssResult: String
+    val podcast: Podcast?
 )
 
 class PodcastRssSearchViewModel(
@@ -20,7 +21,7 @@ class PodcastRssSearchViewModel(
         PodcastRssSearchState(
             isLoading = true,
             errorMsg = "",
-            podcastRssResult = ""
+            podcast = null
         )
     )
 
@@ -31,7 +32,7 @@ class PodcastRssSearchViewModel(
                     it.copy(
                         isLoading = result.isLoading,
                         errorMsg = result.errorMsg,
-                        podcastRssResult = result.podcastRss.toString()
+                        podcast = result.podcast
                     )
                 }
             }

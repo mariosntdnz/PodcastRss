@@ -13,19 +13,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.podcastrss.datasource.remote.PodcastRssFullInformationDataSourceImpl
-import com.example.podcastrss.repository.PodcastRssFullInformationRespositoryImpl
-import com.example.podcastrss.service.RssApiServiceImpl
 import com.example.podcastrss.ui.theme.PodcastRssTheme
-import com.example.podcastrss.use_case.PodcastRssSearchUseCase
 import com.example.podcastrss.viewModel.PodcastRssSearchViewModel
-import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class MainActivity : ComponentActivity() {
@@ -44,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     Greeting(
-                        name = state.podcastRssResult.ifEmpty { state.errorMsg.ifEmpty { state.isLoading.toString() } },
+                        name = state.podcast.toString(),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
