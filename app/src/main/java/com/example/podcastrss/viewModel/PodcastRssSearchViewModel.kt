@@ -64,4 +64,13 @@ class PodcastRssSearchViewModel(
             )
         }
     }
+
+    fun onDispose() {
+        state.update {
+            PodcastRssSearchState(
+                currentSearch = "",
+                searchTypeResult = null
+            )
+        }
+    }
 }

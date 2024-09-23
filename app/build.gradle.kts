@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("io.insert-koin:koin-androidx-compose:3.2.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
     implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
