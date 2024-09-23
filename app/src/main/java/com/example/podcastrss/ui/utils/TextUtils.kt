@@ -28,6 +28,7 @@ fun ExpandableText(
     modifier: Modifier = Modifier,
     minimizedMaxLines: Int = 2,
     maximizedMaxLines: Int = 2,
+    showAfterTap: Boolean = false,
     onClick: () -> Unit
 ) {
     var cutText by remember(text) { mutableStateOf<String?>(null) }
@@ -85,8 +86,10 @@ fun ExpandableText(
                     )
                     .clickable {
                         onClick()
-                        expanded = true
-                        cutText = null
+                        if (showAfterTap) {
+                            expanded = true
+                            cutText = null
+                        }
                     }
                     .alpha(if (seeMoreOffset != null) 1f else 0f),
                 fontSize = fontSize,
@@ -95,3 +98,5 @@ fun ExpandableText(
         }
     }
 }
+
+fun String.isHTML(): Boolean = this.contains("</p>") || this.contains("href=\"")
