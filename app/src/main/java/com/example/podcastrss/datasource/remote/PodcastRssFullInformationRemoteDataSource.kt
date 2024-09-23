@@ -6,13 +6,13 @@ import com.example.podcastrss.service.RssApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-interface PodcastRssFullInformationDataSource {
+interface PodcastRssFullInformationRemoteDataSource {
     fun getPodcastRssFullInformation(url: String): Flow<ResponseResult<PodcastRss>>
 }
 
-class PodcastRssFullInformationDataSourceImpl(
+class PodcastRssFullInformationRemoteDataSourceImpl(
     private val api: RssApiService
-) : PodcastRssFullInformationDataSource {
+) : PodcastRssFullInformationRemoteDataSource {
     override fun getPodcastRssFullInformation(url: String): Flow<ResponseResult<PodcastRss>> =
         flow {
             emit(ResponseResult.Loading)

@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
     factory<PodcastRssFullInformationRespository> {
         PodcastRssFullInformationRespositoryImpl(
-            dataSource = get()
+            remoteDataSource = get()
         )
     }
 }
