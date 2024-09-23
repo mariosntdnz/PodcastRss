@@ -46,7 +46,7 @@ private fun PodcastRss.toPodcast(): Podcast? {
             description = channel.channelDescription,
             bannerUrl = podcastBanner,
             author = channel.author?.firstOrNull()?.auth ?: "",
-            category = channel.categoryChannel?.map { it.category } ?: emptyList(),
+            category = channel.categoryChannel?.map { it.category }?.distinct() ?: emptyList(),
             episodes = channel.itemList?.map { item ->
                 Episode(
                     id = item.guid,
@@ -84,7 +84,9 @@ private fun String.getEpDurationLabel(): String {
         String.format("%02dh %02dmin %02ds", hour, min, sec)
     } else if (min > 0) {
         String.format("%02dmin %02ds", min, sec)
-    } else {
+    } else if (sec > 0){
         String.format("%02ds", sec)
+    } else {
+        ""
     }
 }

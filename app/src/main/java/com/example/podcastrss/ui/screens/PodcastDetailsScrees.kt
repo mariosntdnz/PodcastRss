@@ -302,29 +302,31 @@ fun PodcastDetailsEpisodeItem(
                     }
                 }
             }
-            SpaceHeight(h = 8.dp)
-            AssistChip(
-                onClick = onClick,
-                label = {
-                    Text(
-                        text = duration,
-                        fontSize = 12.sp,
-                        color = Color.Black
+            if (duration.isNotEmpty()) {
+                SpaceHeight(h = 8.dp)
+                AssistChip(
+                    onClick = onClick,
+                    label = {
+                        Text(
+                            text = duration,
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.PlayArrow,
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    },
+                    border = null,
+                    shape = RoundedCornerShape(100),
+                    colors = SuggestionChipDefaults.suggestionChipColors().copy(
+                        containerColor = RedDetails
                     )
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Filled.PlayArrow,
-                        contentDescription = "",
-                        tint = Color.Black
-                    )
-                },
-                border = null,
-                shape = RoundedCornerShape(100),
-                colors = SuggestionChipDefaults.suggestionChipColors().copy(
-                    containerColor = RedDetails
                 )
-            )
+            }
         }
     }
 }
