@@ -42,22 +42,22 @@ private fun PodcastRss.toPodcast(): Podcast? {
 
         val podcastBanner = channel.imageChannel?.map {
             it.url.ifEmpty { it.href }
-        }?.first() ?: ""
+        }?.firstOrNull() ?: ""
 
         Podcast(
             name = channel.channelTitle ?: "",
             description = channel.channelDescription,
             bannerUrl = podcastBanner,
-            author = channel.author?.first()?.auth ?: "",
+            author = channel.author?.firstOrNull()?.auth ?: "",
             category = channel.categoryChannel?.map { it.category } ?: emptyList(),
             episodes = channel.itemList?.map { item ->
                 Episode(
                     id = item.guid,
-                    title = item.title?.first()?.title ?: "",
+                    title = item.title?.firstOrNull()?.title ?: "",
                     description = item.description,
                     duration = item.duration.getEpDurationInSeconds(),
                     durationLabel = item.duration.getEpDurationLabel(),
-                    imageUrl = item.image?.map { it.url.ifEmpty { it.href } }?.first() ?: podcastBanner,
+                    imageUrl = item.image?.map { it.url.ifEmpty { it.href } }?.firstOrNull() ?: podcastBanner,
                     pubDate = item.pubDate,
                     explicit = item.explicit,
                     episodeUrl = item.enclosure?.url ?: ""
@@ -71,7 +71,7 @@ private fun String.getEpDurationInSeconds(): Long {
     return toLongOrNull() ?: run {
         var sum = 0L
         this.split(":").reversed().forEachIndexed { index, s ->
-            sum += s.toLong() * 60.0.pow(index).toLong()
+            sum += (s.toLongOrNull() ?: 0L) * 60.0.pow(index).toLong()
         }
         return sum
     }

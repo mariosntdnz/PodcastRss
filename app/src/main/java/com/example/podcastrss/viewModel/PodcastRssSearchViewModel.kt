@@ -9,25 +9,32 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class PodcastRssSearchState(
+    val currentSearch: String,
     val isLoading: Boolean,
     val errorMsg: String,
     val podcast: Podcast?
-)
+) {
+    val hasError = errorMsg.isNotEmpty()
+}
 
 class PodcastRssSearchViewModel(
     private val podcastRssSearchUseCase: PodcastRssSearchUseCase
 ): ViewModel() {
     val state = MutableStateFlow(
         PodcastRssSearchState(
-            isLoading = true,
+            isLoading = false,
             errorMsg = "",
-            podcast = null
+            podcast = null,
+            currentSearch = ""
         )
     )
 
-    fun searchPodcastRss(url: String) {
+    fun searchPodcastRss() {
         viewModelScope.launch {
-            podcastRssSearchUseCase.invoke(url,this).collect { result ->
+            val search = state.value.currentSearch
+            if (search.isEmpty()) return@launch
+
+            podcastRssSearchUseCase.invoke(search,this).collect { result ->
                 state.update {
                     it.copy(
                         isLoading = result.isLoading,
@@ -36,6 +43,28 @@ class PodcastRssSearchViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun updateSearch(
+        search: String
+    ) {
+        state.update {
+            it.copy(
+                currentSearch = search
+            )
+        }
+    }
+
+    fun clearSearch() {
+        updateSearch("")
+    }
+
+    fun retry() {
+        state.update {
+            it.copy(
+                errorMsg = ""
+            )
         }
     }
 }

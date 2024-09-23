@@ -20,7 +20,7 @@ fun NavGraph(
         startDestination = startDestination
     ) {
         composable(searchScreenRoute) {
-            SearchPodcastScreen()
+            SearchPodcastScreen(navController)
         }
     }
 }
