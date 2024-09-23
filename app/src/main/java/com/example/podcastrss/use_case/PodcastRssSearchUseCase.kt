@@ -13,10 +13,14 @@ import kotlin.math.pow
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-data class PodcastRssFullInformationResult(
-    val isLoading: Boolean,
-    val errorMsg: String,
-    val podcast: Podcast?
+sealed class PodcastSearchTypeResult() {
+    data object Loading: PodcastSearchTypeResult()
+    data class Error(val msg: String): PodcastSearchTypeResult()
+    data object Success: PodcastSearchTypeResult()
+}
+
+data class PodcastSearchResult(
+    val result: PodcastSearchTypeResult
 )
 
 class PodcastRssSearchUseCase(
@@ -25,12 +29,15 @@ class PodcastRssSearchUseCase(
      suspend operator fun invoke(
         url: String,
         scope: CoroutineScope
-    ): StateFlow<PodcastRssFullInformationResult> {
+    ): StateFlow<PodcastSearchResult> {
         return podcastRssFullInformationRespository.getPodcastRssFullInformation(url).map {
-            PodcastRssFullInformationResult(
-                isLoading = it is ResponseResult.Loading,
-                errorMsg = if (it is ResponseResult.Error) it.msg.ifEmpty { "Error!" } else "",
-                podcast = if (it is ResponseResult.Success) it.data.toPodcast() else null
+            PodcastSearchResult(
+                result = when (it) {
+                    is ResponseResult.Error -> PodcastSearchTypeResult.Error(it.msg)
+                    is ResponseResult.Loading -> PodcastSearchTypeResult.Loading
+                    is ResponseResult.Success -> PodcastSearchTypeResult.Success
+                    is ResponseResult.Empty -> PodcastSearchTypeResult.Error("Erro inesperado")
+                }
             )
         }.stateIn(scope)
     }

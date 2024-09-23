@@ -24,6 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.podcastrss.R
+import com.example.podcastrss.ui.navigation.NavRoutes.podcastDetailsRoute
 import com.example.podcastrss.ui.utils.SpaceHeight
 import com.example.podcastrss.ui.utils.SpaceWidth
 import com.example.podcastrss.viewModel.PodcastRssSearchViewModel
@@ -50,6 +52,12 @@ fun SearchPodcastScreen(
 ) {
     val viewModel = getViewModel<PodcastRssSearchViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.searchSuccess) {
+        if (state.searchSuccess) {
+            navController.navigate(podcastDetailsRoute)
+        }
+    }
 
     if (state.hasError) {
         ErrorSearchScreen(

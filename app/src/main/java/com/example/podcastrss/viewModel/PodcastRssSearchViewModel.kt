@@ -2,19 +2,20 @@ package com.example.podcastrss.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.podcastrss.models.Podcast
 import com.example.podcastrss.use_case.PodcastRssSearchUseCase
+import com.example.podcastrss.use_case.PodcastSearchTypeResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class PodcastRssSearchState(
     val currentSearch: String,
-    val isLoading: Boolean,
-    val errorMsg: String,
-    val podcast: Podcast?
+    val searchTypeResult: PodcastSearchTypeResult?
 ) {
-    val hasError = errorMsg.isNotEmpty()
+    val hasError = searchTypeResult is PodcastSearchTypeResult.Error
+    val isLoading = searchTypeResult is PodcastSearchTypeResult.Loading
+    val searchSuccess = searchTypeResult is PodcastSearchTypeResult.Success
+    val errorMsg = if (hasError) (searchTypeResult as PodcastSearchTypeResult.Error).msg else ""
 }
 
 class PodcastRssSearchViewModel(
@@ -22,10 +23,8 @@ class PodcastRssSearchViewModel(
 ): ViewModel() {
     val state = MutableStateFlow(
         PodcastRssSearchState(
-            isLoading = false,
-            errorMsg = "",
-            podcast = null,
-            currentSearch = ""
+            currentSearch = "",
+            searchTypeResult = null
         )
     )
 
@@ -37,9 +36,7 @@ class PodcastRssSearchViewModel(
             podcastRssSearchUseCase.invoke(search,this).collect { result ->
                 state.update {
                     it.copy(
-                        isLoading = result.isLoading,
-                        errorMsg = result.errorMsg,
-                        podcast = result.podcast
+                        searchTypeResult = result.result
                     )
                 }
             }
@@ -63,7 +60,7 @@ class PodcastRssSearchViewModel(
     fun retry() {
         state.update {
             it.copy(
-                errorMsg = ""
+                searchTypeResult = null
             )
         }
     }
