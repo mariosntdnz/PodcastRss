@@ -46,6 +46,8 @@ import com.example.podcastrss.ui.utils.SpaceHeight
 import com.example.podcastrss.ui.utils.SpaceWidth
 import com.example.podcastrss.viewModel.PodcastRssSearchViewModel
 import org.koin.androidx.compose.getViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun SearchPodcastScreen(
@@ -56,7 +58,8 @@ fun SearchPodcastScreen(
 
     LaunchedEffect(state.searchSuccess) {
         if (state.searchSuccess) {
-            navController.navigate(podcastDetailsRoute)
+            val encodedUrl = URLEncoder.encode(state.currentSearch, StandardCharsets.UTF_8.toString())
+            navController.navigate("$podcastDetailsRoute/$encodedUrl")
         }
     }
 

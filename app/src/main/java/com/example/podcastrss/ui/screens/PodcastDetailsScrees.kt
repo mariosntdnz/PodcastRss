@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +26,8 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
@@ -45,23 +49,50 @@ import com.example.podcastrss.R
 import com.example.podcastrss.ui.theme.RedDetails
 import com.example.podcastrss.ui.utils.SpaceHeight
 import com.example.podcastrss.ui.utils.SpaceWidth
+import com.example.podcastrss.viewModel.PodcastDetailsViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun PodcastDetailsScreen(
+    url: String,
     navController: NavController
 ) {
-    LazyColumn {
-        item {
-            PodcastDetailsHeaderPreview()
-        }
-        items(10) {
-            Box(
-                Modifier
-                    .padding(horizontal = 16.dp)
-            ) {
-                PodcastDetailsEpisodeItemPreview()
+    val viewModel = getViewModel<PodcastDetailsViewModel>()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    SideEffect {
+        viewModel.showDetail(url)
+    }
+
+    state.podcast?.let { pod ->
+        LazyColumn {
+            item {
+                PodcastDetailsHeader(
+                    imageUrl = pod.bannerUrl,
+                    name = pod.name,
+                    description = pod.description,
+                    author = pod.author,
+                    categories = pod.category
+                )
             }
-            SpaceHeight(h = 4.dp)
+
+            items(pod.episodes) { ep ->
+                Box(
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                ) {
+                    PodcastDetailsEpisodeItem(
+                        imageUrl = ep.imageUrl,
+                        title = ep.title,
+                        description = ep.description,
+                        duration = ep.durationLabel,
+                        explicit = ep.explicit,
+                        date = ep.pubDate,
+                        onClick = {}
+                    )
+                }
+                SpaceHeight(h = 4.dp)
+            }
         }
     }
 }
@@ -95,6 +126,7 @@ fun PodcastDetailsHeader(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            SpaceWidth(w = 16.dp)
             AsyncImage(
                 model = imageRequest,
                 contentDescription = "",
@@ -115,6 +147,8 @@ fun PodcastDetailsHeader(
                     text = description,
                     fontSize = 16.sp,
                     color = Color.Black,
+                    minimizedMaxLines = 3,
+                    maximizedMaxLines = 3,
                     onClick = {}
                 )
                 SpaceHeight(h = 16.dp)
@@ -228,8 +262,8 @@ fun PodcastDetailsEpisodeItem(
                             text = title,
                             fontSize = 16.sp,
                             color = Color.Black,
-                            maximizedMaxLines = 1,
-                            minimizedMaxLines = 1,
+                            maximizedMaxLines = 2,
+                            minimizedMaxLines = 2,
                             onClick = {},
                             modifier = Modifier.weight(1f,fill = false)
                         )
@@ -247,6 +281,8 @@ fun PodcastDetailsEpisodeItem(
                         text = description,
                         fontSize = 14.sp,
                         color = Color.Black,
+                        maximizedMaxLines = 3,
+                        minimizedMaxLines = 3,
                         onClick = {}
                     )
                     SpaceHeight(h = 16.dp)

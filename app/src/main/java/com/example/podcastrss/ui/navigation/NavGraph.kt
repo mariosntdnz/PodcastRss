@@ -3,8 +3,10 @@ package com.example.podcastrss.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.podcastrss.ui.navigation.NavRoutes.podcastDetailsRoute
 import com.example.podcastrss.ui.navigation.NavRoutes.searchScreenRoute
 import com.example.podcastrss.ui.screens.PodcastDetailsScreen
@@ -25,8 +27,14 @@ fun NavGraph(
             SearchPodcastScreen(navController)
         }
 
-        composable(podcastDetailsRoute) {
-            PodcastDetailsScreen(navController)
+        composable(
+            "$podcastDetailsRoute/{url}",
+            arguments = listOf(
+                navArgument("url") { type = NavType.StringType }
+            )
+        ) {
+            val url = it.arguments?.getString("url") ?: ""
+            PodcastDetailsScreen(url, navController)
         }
     }
 }
