@@ -19,13 +19,14 @@
 ### Bibliotecas e afins
 
 - Compose
+- Koin
+- Retrofit
 - Arquitetura MVVM
 - Navigation
-- Koin
 - Room
 - Testes unitários
 - Flow corotines
-- Retrofit
+- Coil
 
 ### Principais dificuldades
 - Mapear o xml quando tinha dois elementos com o mesmo nome e o namespace diferente, demorou um pouco a achar a solução e atrasou o projeto
