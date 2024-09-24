@@ -46,15 +46,15 @@ class PodcastPlayerRepositoryImpl(
     }
 
     override fun hasPrevEp(podcastUrl: String, guid: String): Flow<Boolean> {
-        return podcastResponseMemoryCache.getPodcastRss(podcastUrl)?.map {
-            it.toPodcast()?.episodes?.first()?.id != playerPodcastMemoryCache.getEp(podcastUrl)?.value?.id
-        } ?: flowOf(false)
+        return playerPodcastMemoryCache.getEp(podcastUrl).map {
+            it?.id != podcastResponseMemoryCache.getPodcastRss(podcastUrl)?.value?.toPodcast()?.episodes?.firstOrNull()?.id
+        }
     }
 
     override fun hasNextEp(podcastUrl: String, guid: String): Flow<Boolean> {
-        return podcastResponseMemoryCache.getPodcastRss(podcastUrl)?.map {
-            it.toPodcast()?.episodes?.last()?.id != playerPodcastMemoryCache.getEp(podcastUrl)?.value?.id
-        } ?: flowOf(false)
+        return playerPodcastMemoryCache.getEp(podcastUrl).map {
+            it?.id != podcastResponseMemoryCache.getPodcastRss(podcastUrl)?.value?.toPodcast()?.episodes?.lastOrNull()?.id
+        }
     }
 
     override suspend fun nextEp(podcastUrl: String, guid: String) {
