@@ -22,7 +22,7 @@ class GetCurrentEpPlayerPodcastUseCase(
         scope: CoroutineScope
     ): StateFlow<GetCurrentEpPlayerPodcastResult>{
         return combine(
-            flow = podcastPlayerRepository.getCurrentEp(urlPodcast, guidInitialEp),
+            flow = podcastPlayerRepository.getCurrentEp(urlPodcast),
             flow2 = podcastPlayerRepository.hasNextEp(urlPodcast, guidInitialEp).stateIn(scope),
             flow3 = podcastPlayerRepository.hasPrevEp(urlPodcast, guidInitialEp).stateIn(scope)
         ) { ep, next, prev ->

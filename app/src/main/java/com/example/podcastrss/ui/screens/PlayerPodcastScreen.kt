@@ -77,7 +77,7 @@ fun PlayerPodcastScreen(
     val viewModel = getViewModel<PodcastPlayerViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    SideEffect {
+    LaunchedEffect(url,guid) {
         viewModel.initPlayer(url,guid)
     }
 

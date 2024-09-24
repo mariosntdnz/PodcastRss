@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface PodcastPlayerMemoryCache {
     suspend fun storeEp(key: String, ep: Episode)
-    fun getEp(key: String): StateFlow<Episode>?
+    fun getEp(key: String): StateFlow<Episode?>
 }
 
 class PodcastPlayerMemoryCacheImpl: PodcastPlayerMemoryCache {
@@ -23,8 +23,8 @@ class PodcastPlayerMemoryCacheImpl: PodcastPlayerMemoryCache {
         }
     }
 
-    override fun getEp(key: String): StateFlow<Episode>? {
-        return podcastPlayerMemoryCache[key]
+    override fun getEp(key: String): StateFlow<Episode?> {
+        return podcastPlayerMemoryCache[key] ?: MutableStateFlow(null)
     }
 
 }

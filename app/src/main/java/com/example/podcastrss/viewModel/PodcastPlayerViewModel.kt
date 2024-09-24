@@ -6,7 +6,6 @@ import com.example.podcastrss.models.Episode
 import com.example.podcastrss.repository.PodcastPlayerRepository
 import com.example.podcastrss.use_case.GetCurrentEpPlayerPodcastUseCase
 import com.example.podcastrss.use_case.getEpDurationLabel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,6 +33,11 @@ class PodcastPlayerViewModel(
         urlPodcast: String,
         guid: String
     ) {
+
+        viewModelScope.launch {
+            playerRepository.setEp(urlPodcast,guid)
+        }
+
         viewModelScope.launch {
             getCurrentEpPlayerPodcastUseCase.invoke(urlPodcast, guid, this).collect { result ->
                 state.update {
@@ -45,6 +49,7 @@ class PodcastPlayerViewModel(
                 }
             }
         }
+
     }
 
     fun nextEp(urlPodcast: String) {
