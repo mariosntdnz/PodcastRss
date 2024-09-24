@@ -9,7 +9,8 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         PodcastRssSearchViewModel(
-            podcastRssSearchUseCase = get()
+            podcastRssSearchUseCase = get(),
+            historyRepository = get()
         )
     }
 

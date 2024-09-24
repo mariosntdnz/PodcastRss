@@ -19,6 +19,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,6 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -38,10 +43,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.test.platform.tracing.Tracer.Span
 import com.example.podcastrss.R
 import com.example.podcastrss.ui.navigation.NavRoutes.podcastDetailsRoute
+import com.example.podcastrss.ui.utils.IconClickable
+import com.example.podcastrss.ui.utils.SpaceGrow
 import com.example.podcastrss.ui.utils.SpaceHeight
 import com.example.podcastrss.ui.utils.SpaceWidth
 import com.example.podcastrss.viewModel.PodcastRssSearchViewModel
@@ -58,7 +67,8 @@ fun SearchPodcastScreen(
 
     LaunchedEffect(state.searchSuccess) {
         if (state.searchSuccess) {
-            val encodedUrl = URLEncoder.encode(state.currentSearch, StandardCharsets.UTF_8.toString())
+            val encodedUrl =
+                URLEncoder.encode(state.currentSearch, StandardCharsets.UTF_8.toString())
             navController.navigate("$podcastDetailsRoute/$encodedUrl")
         }
     }
@@ -77,10 +87,13 @@ fun SearchPodcastScreen(
     } else {
         DefaultSearchScreen(
             currentSearch = state.currentSearch,
+            historySearch = state.history,
             isLoading = state.isLoading,
             updateSearch = viewModel::updateSearch,
             searchPodcastRss = viewModel::searchPodcastRss,
-            clearSearch = viewModel::clearSearch
+            clearSearch = viewModel::clearSearch,
+            deleteHistorySearch = viewModel::deleteSearch,
+            searchFromHistory = viewModel::searchFromHistory
         )
     }
 }
@@ -88,12 +101,21 @@ fun SearchPodcastScreen(
 @Composable
 fun DefaultSearchScreen(
     currentSearch: String,
+    historySearch: List<String>,
     isLoading: Boolean,
     updateSearch: (String) -> Unit,
     searchPodcastRss: () -> Unit,
-    clearSearch: () -> Unit
+    clearSearch: () -> Unit,
+    deleteHistorySearch: (String) -> Unit,
+    searchFromHistory: (String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    var menuIsExpanded by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(historySearch) {
+        menuIsExpanded = historySearch.isNotEmpty()
+    }
 
     Box(
         modifier = Modifier
@@ -163,6 +185,37 @@ fun DefaultSearchScreen(
                     }
                 )
             )
+            DropdownMenu(
+                expanded = menuIsExpanded,
+                onDismissRequest = {
+                    menuIsExpanded = false
+                },
+                properties = PopupProperties(focusable = false),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                historySearch.forEach { history ->
+                    DropdownMenuItem(text = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = history, modifier = Modifier.weight(1f))
+                            SpaceWidth(w = 4.dp)
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .clickable {
+                                        deleteHistorySearch(history)
+                                    }
+                            )
+                        }
+                    }, onClick = {
+                        searchFromHistory(history)
+                        menuIsExpanded = false
+                    })
+                }
+            }
         }
 
         Button(
@@ -200,8 +253,7 @@ fun DefaultSearchScreen(
             Box(
                 Modifier
                     .fillMaxHeight(0.7f)
-                    .fillMaxWidth()
-                ,
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
@@ -214,6 +266,7 @@ fun DefaultSearchScreen(
 
     }
 }
+
 @Composable
 fun ErrorSearchScreen(
     msg: String,
@@ -227,8 +280,7 @@ fun ErrorSearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-            ,
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -1,9 +1,9 @@
 package com.example.podcastrss.application
 
 import android.app.Application
+import androidx.room.Room
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import coil.annotation.ExperimentalCoilApi
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.util.DebugLogger
@@ -17,6 +17,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
 class App : Application(), ImageLoaderFactory {
+
+    companion object {
+        var database: DataBase? = null
+    }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -29,6 +34,9 @@ class App : Application(), ImageLoaderFactory {
             modules(useCaseModule)
             modules(storeModule)
         }
+
+        database = Room.databaseBuilder(this, DataBase::class.java, "my-db").allowMainThreadQueries().build()
+
     }
 
     override fun newImageLoader(): ImageLoader {
