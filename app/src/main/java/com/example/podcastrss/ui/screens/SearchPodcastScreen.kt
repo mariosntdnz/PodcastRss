@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -48,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.test.platform.tracing.Tracer.Span
 import com.example.podcastrss.R
+import com.example.podcastrss.ui.navigation.NavRoutes.configScreenRoute
 import com.example.podcastrss.ui.navigation.NavRoutes.podcastDetailsRoute
 import com.example.podcastrss.ui.utils.IconClickable
 import com.example.podcastrss.ui.utils.SpaceGrow
@@ -93,7 +95,10 @@ fun SearchPodcastScreen(
             searchPodcastRss = viewModel::searchPodcastRss,
             clearSearch = viewModel::clearSearch,
             deleteHistorySearch = viewModel::deleteSearch,
-            searchFromHistory = viewModel::searchFromHistory
+            searchFromHistory = viewModel::searchFromHistory,
+            navigateToConfig = {
+                navController.navigate(configScreenRoute)
+            }
         )
     }
 }
@@ -107,7 +112,8 @@ fun DefaultSearchScreen(
     searchPodcastRss: () -> Unit,
     clearSearch: () -> Unit,
     deleteHistorySearch: (String) -> Unit,
-    searchFromHistory: (String) -> Unit
+    searchFromHistory: (String) -> Unit,
+    navigateToConfig: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var menuIsExpanded by remember {
@@ -122,6 +128,15 @@ fun DefaultSearchScreen(
             .fillMaxSize()
             .padding(top = 32.dp)
     ) {
+        Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = "",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(end = 16.dp)
+                .clickable(onClick = navigateToConfig)
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxHeight(.20f)

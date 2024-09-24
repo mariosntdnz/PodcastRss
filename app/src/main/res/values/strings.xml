@@ -3,4 +3,5 @@
     <string name="search_podcast_placeholder">Busque seu podcast com um link ;)</string>
     <string name="search_label_action">Buscar</string>
     <string name="retry">Tentar novamente</string>
+    <string name="clean_cache">Limpar cache</string>
 </resources>
