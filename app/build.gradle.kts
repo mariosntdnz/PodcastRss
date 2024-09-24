@@ -77,6 +77,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("io.insert-koin:koin-androidx-compose:3.2.0")
     implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-ui:1.2.0")
     implementation(libs.androidx.junit.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)

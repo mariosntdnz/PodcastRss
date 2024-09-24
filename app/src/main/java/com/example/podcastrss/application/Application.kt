@@ -10,6 +10,7 @@ import coil.util.DebugLogger
 import com.example.podcastrss.di.datasource_module.dataSourceModule
 import com.example.podcastrss.di.repository_module.repositoryModule
 import com.example.podcastrss.di.service.serviceModule
+import com.example.podcastrss.di.store.storeModule
 import com.example.podcastrss.di.usecase_module.useCaseModule
 import com.example.podcastrss.di.viewmodels_module.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -26,6 +27,7 @@ class App : Application(), ImageLoaderFactory {
             modules(dataSourceModule)
             modules(serviceModule)
             modules(useCaseModule)
+            modules(storeModule)
         }
     }
 

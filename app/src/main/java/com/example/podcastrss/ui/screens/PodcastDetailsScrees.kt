@@ -58,6 +58,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.podcastrss.R
+import com.example.podcastrss.ui.navigation.NavRoutes.playerPodcastRoute
 import com.example.podcastrss.ui.theme.RedDetails
 import com.example.podcastrss.ui.utils.SpaceGrow
 import com.example.podcastrss.ui.utils.SpaceHeight
@@ -66,6 +67,8 @@ import com.example.podcastrss.viewModel.PodcastDetailsViewModel
 import com.google.android.material.textview.MaterialTextView
 import isHTML
 import org.koin.androidx.compose.getViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,7 +124,9 @@ fun PodcastDetailsScreen(
                         duration = ep.durationLabel,
                         explicit = ep.explicit,
                         date = ep.pubDate,
-                        onClick = {},
+                        onClick = {
+                            navController.navigate("$playerPodcastRoute/${URLEncoder.encode(url, StandardCharsets.UTF_8.toString())}/${ep.id}")
+                        },
                         seeMore = { title, descr ->
                             openTextDetails = true
                             titleDetails = title
@@ -346,6 +351,7 @@ fun PodcastDetailsEpisodeItem(
             Modifier
                 .background(Color.White)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
+                .clickable(onClick = onClick)
         ) {
             Row(
                 modifier = Modifier

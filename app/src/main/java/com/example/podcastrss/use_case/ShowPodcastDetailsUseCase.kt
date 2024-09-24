@@ -3,6 +3,7 @@ package com.example.podcastrss.use_case
 import com.example.podcastrss.models.Episode
 import com.example.podcastrss.models.Podcast
 import com.example.podcastrss.models.PodcastRss
+import com.example.podcastrss.models.PodcastRssItem
 import com.example.podcastrss.repository.PodcastRssFullInformationRespository
 import com.example.podcastrss.result.ResponseResult
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +34,7 @@ class ShowPodcastDetailsUseCase(
 }
 
 
-private fun PodcastRss.toPodcast(): Podcast? {
+fun PodcastRss.toPodcast(): Podcast? {
     val rssChannel = this.channel
     return rssChannel?.let { channel ->
 
@@ -48,20 +49,26 @@ private fun PodcastRss.toPodcast(): Podcast? {
             author = channel.author?.firstOrNull()?.auth ?: "",
             category = channel.categoryChannel?.map { it.category }?.distinct() ?: emptyList(),
             episodes = channel.itemList?.map { item ->
-                Episode(
-                    id = item.guid,
-                    title = item.title?.firstOrNull()?.title ?: "",
-                    description = item.description,
-                    duration = item.duration.getEpDurationInSeconds(),
-                    durationLabel = item.duration.getEpDurationLabel(),
-                    imageUrl = item.image?.map { it.url.ifEmpty { it.href } }?.firstOrNull() ?: podcastBanner,
-                    pubDate = item.pubDate,
-                    explicit = item.explicit,
-                    episodeUrl = item.enclosure?.url ?: ""
-                )
+                item.toEpisode(podcastBanner)
             } ?: emptyList()
         )
     }
+}
+
+fun PodcastRssItem.toEpisode(
+    defaultBanner: String = ""
+): Episode {
+    return Episode(
+        id = this.guid,
+        title = this.title?.firstOrNull()?.title ?: "",
+        description = this.description,
+        duration = this.duration.getEpDurationInSeconds(),
+        durationLabel = this.duration.getEpDurationLabel(),
+        imageUrl = this.image?.map { it.url.ifEmpty { it.href } }?.firstOrNull() ?: defaultBanner,
+        pubDate = this.pubDate,
+        explicit = this.explicit,
+        episodeUrl = this.enclosure?.url ?: ""
+    )
 }
 
 private fun String.getEpDurationInSeconds(): Long {
@@ -74,7 +81,7 @@ private fun String.getEpDurationInSeconds(): Long {
     }
 }
 
-private fun String.getEpDurationLabel(): String {
+fun String.getEpDurationLabel(): String {
     val duration = getEpDurationInSeconds().toDuration(DurationUnit.SECONDS)
     val  hour = duration.inWholeSeconds / 3600
     val  min = (duration.inWholeSeconds  % 3600) / 60

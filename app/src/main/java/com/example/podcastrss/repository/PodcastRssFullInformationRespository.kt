@@ -1,10 +1,11 @@
 package com.example.podcastrss.repository
 
+import com.example.podcastrss.application.PodcastPlayerMemoryCache
+import com.example.podcastrss.application.PodcastResponseMemoryCache
 import com.example.podcastrss.datasource.remote.PodcastRssFullInformationRemoteDataSource
 import com.example.podcastrss.models.PodcastRss
 import com.example.podcastrss.result.ResponseResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 
@@ -13,15 +14,12 @@ interface PodcastRssFullInformationRespository {
 }
 
 class PodcastRssFullInformationRespositoryImpl(
-    private val remoteDataSource: PodcastRssFullInformationRemoteDataSource
+    private val remoteDataSource: PodcastRssFullInformationRemoteDataSource,
+    private val localDataSource: PodcastResponseMemoryCache
 ): PodcastRssFullInformationRespository {
 
-    private val cacheMaxSize = 5
-
-    val searchCache = HashMap<String, Flow<PodcastRss>>()
-
     override suspend fun getPodcastRssFullInformation(url: String): Flow<ResponseResult<PodcastRss>> {
-        searchCache[url]?.let {
+        localDataSource.getPodcastRss(url)?.let {
             return it.map { data -> ResponseResult.Success(data) }
         }
 
@@ -35,9 +33,7 @@ class PodcastRssFullInformationRespositoryImpl(
         return fullInfoFlow
     }
 
-    private fun store(url: String, response: PodcastRss) {
-        if (searchCache.keys.size < cacheMaxSize) {
-            searchCache[url] = flowOf(response)
-        }
+    private suspend fun store(url: String, response: PodcastRss) {
+        localDataSource.storePodcastRss(url, response)
     }
 }
